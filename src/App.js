@@ -1,24 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import { lazy, Suspense } from 'react';
+import Loader from './components/loader';
+import { Provider } from 'react-redux';
+import appStore from './store';
+
+const load = (Component) => (props) => (
+  <Suspense fallback={<Loader/>}>
+    <Component {...props} />
+  </Suspense>
+);
+
+const Main = load(lazy(()=> import('./screens/main/index')));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={appStore}>
+      <div className="App">
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Main />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
+    </Provider>
   );
 }
 
