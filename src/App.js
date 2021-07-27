@@ -1,4 +1,3 @@
-import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,6 +8,8 @@ import { lazy, Suspense } from 'react';
 import Loader from './components/loader';
 import { Provider } from 'react-redux';
 import appStore from './store';
+import Zribble from './screens/zribble/index';
+import { ChakraProvider } from "@chakra-ui/react";
 
 const load = (Component) => (props) => (
   <Suspense fallback={<Loader/>}>
@@ -20,17 +21,22 @@ const Main = load(lazy(()=> import('./screens/main/index')));
 
 function App() {
   return (
-    <Provider store={appStore}>
-      <div className="App">
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <Main />
-            </Route>
-          </Switch>
-        </Router>
-      </div>
-    </Provider>
+    <ChakraProvider>
+      <Provider store={appStore}>
+        <div className="App">
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Main />
+              </Route>
+              <Route path="/rooms/:id">
+                <Zribble/>
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      </Provider>
+    </ChakraProvider>
   );
 }
 
